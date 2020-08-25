@@ -1,7 +1,6 @@
-﻿using maelstorm_api.DTOs.Response;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace maelstorm_dtos.DTOs.Responses
+namespace MaelstormDTO.Responses
 {
     public class Dialog
     {

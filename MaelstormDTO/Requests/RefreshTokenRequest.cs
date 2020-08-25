@@ -1,4 +1,4 @@
-﻿namespace maelstorm_dtos.DTOs.Requests
+﻿namespace MaelstormDTO.Requests
 {
     public class RefreshTokenRequest
     {

@@ -1,10 +1,11 @@
-﻿using maelstorm_api;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace maelstorm_dtos.DTOs.Responses
+namespace MaelstormDTO.Responses
 {
     public class AuthenticationResult
     {
+        [JsonProperty]
+        public int Id {get; set; }
         [JsonProperty]
         public string IVBase64 { get; set; }
         [JsonProperty]

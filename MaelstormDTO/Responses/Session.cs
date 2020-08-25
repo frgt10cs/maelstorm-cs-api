@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace maelstorm_dtos.DTOs.Responses
+namespace MaelstormDTO.Responses
 {
     public class Session
     {

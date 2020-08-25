@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\maelstorm-dtos\maelstorm-dtos.csproj" />
+      <ProjectReference Include="..\MaelstormDTO\MaelstormDTO.csproj" />
     </ItemGroup>
 
 </Project>

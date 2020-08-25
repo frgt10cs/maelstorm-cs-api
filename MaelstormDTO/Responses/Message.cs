@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace maelstorm_api.DTOs.Response
+namespace MaelstormDTO.Responses
 {
     public class Message
     {
@@ -16,7 +16,7 @@ namespace maelstorm_api.DTOs.Response
         [JsonProperty]
         public DateTime DateOfSending { get; set; }
         [JsonProperty]
-        public byte Status { get; set; }
+        public bool IsReaded { get; set; }
         [JsonProperty]
         public string Text { get; set; }
     }

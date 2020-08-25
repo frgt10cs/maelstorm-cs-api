@@ -1,4 +1,4 @@
-﻿namespace maelstorm_dtos.DTOs.Responses
+﻿namespace MaelstormDTO.Responses
 {
     public class OnlineStatus
     {

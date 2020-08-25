@@ -8,7 +8,7 @@ namespace maelstorm_api_client
     {
         static void Main(string[] args)
         {
-            var result = Client.AuthenticateAsync("huii", "1234567890").Result;
+            var result = Client.AuthenticateAsync("hi", "1234567890").Result;
             if (result)
             {
                 Console.WriteLine("Token generation time: " + DateTime.Now);
@@ -20,7 +20,7 @@ namespace maelstorm_api_client
                 var dialogs = Dialogs.GetDialogsAsync().Result;
                 foreach (var dialog in dialogs)
                 {
-                    Console.WriteLine(dialog.EncryptedKey);
+                    Console.WriteLine(dialog.dialog.EncryptedKey);
                 }
             }
             else

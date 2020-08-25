@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maelstorm-api", "maelstorm-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maelstorm-api-client", "maelstorm-api-client\maelstorm-api-client.csproj", "{17CE084B-1237-467F-9834-F4626584C619}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maelstorm-dtos", "maelstorm-dtos\maelstorm-dtos.csproj", "{C4047978-684B-4F9E-9899-C642B2872146}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaelstormDTO", "MaelstormDTO\MaelstormDTO.csproj", "{C4047978-684B-4F9E-9899-C642B2872146}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

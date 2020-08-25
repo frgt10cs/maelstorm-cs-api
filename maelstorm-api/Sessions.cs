@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using maelstorm_dtos.DTOs.Requests;
-using maelstorm_dtos.DTOs.Responses;
+using MaelstormDTO.Requests;
+using MaelstormDTO.Responses;
 
 namespace maelstorm_api
 {

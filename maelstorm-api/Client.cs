@@ -7,8 +7,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DeviceId;
-using maelstorm_dtos.DTOs.Requests;
-using maelstorm_dtos.DTOs.Responses;
+using MaelstormDTO.Requests;
+using MaelstormDTO.Responses;
 using Newtonsoft.Json;
 using Ninject.Activation;
 
@@ -19,6 +19,7 @@ namespace maelstorm_api
         private static readonly HttpClient httpClient;
         private const int tokenExpiresInMinutes = 5;
         private static Tokens tokens;
+        internal static int Id; 
         private static string fingerprint;
         private static string app;
         private static string os;
@@ -126,6 +127,7 @@ namespace maelstorm_api
             if (result.Ok)
             {
                 tokens = result.Data.Tokens;
+                Id = result.Data.Id;
                 return true;
             }
 
