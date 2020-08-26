@@ -23,6 +23,7 @@ namespace maelstorm_api.Models
             var httpMessage = new HttpRequestMessage(HttpMethod.Post, "messages");
             var messageRequest = new SendMessageRequest()
             {
+                DialogId =  dialogMessage.DialogId,
                 Text = dialogMessage.Text,
                 IVBase64 = dialogMessage.IVBase64
             };

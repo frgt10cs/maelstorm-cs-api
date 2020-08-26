@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maelstorm-api-client", "mae
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaelstormDTO", "MaelstormDTO\MaelstormDTO.csproj", "{C4047978-684B-4F9E-9899-C642B2872146}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaelstormApiTests", "MaelstormApiTests\MaelstormApiTests.csproj", "{CF0AAC9E-A34C-48AB-BF37-006D63576250}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{C4047978-684B-4F9E-9899-C642B2872146}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4047978-684B-4F9E-9899-C642B2872146}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4047978-684B-4F9E-9899-C642B2872146}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF0AAC9E-A34C-48AB-BF37-006D63576250}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF0AAC9E-A34C-48AB-BF37-006D63576250}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF0AAC9E-A34C-48AB-BF37-006D63576250}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF0AAC9E-A34C-48AB-BF37-006D63576250}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

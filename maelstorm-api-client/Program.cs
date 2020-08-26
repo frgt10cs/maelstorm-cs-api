@@ -8,19 +8,16 @@ namespace maelstorm_api_client
     {
         static void Main(string[] args)
         {
-            var result = Client.AuthenticateAsync("hi", "1234567890").Result;
+            var result = Client.AuthenticateAsync("huii", "1234567890").Result;
             if (result)
             {
                 Console.WriteLine("Token generation time: " + DateTime.Now);
-                Task.Delay(305000).Wait();
-                Console.WriteLine("Run!");
-                Console.Beep();
-                Console.Beep();
-                Console.Beep();
-                var dialogs = Dialogs.GetDialogsAsync().Result;
-                foreach (var dialog in dialogs)
+                var sessions = Sessions.GetSessionsAsync().Result;
+                foreach (var session in sessions)
                 {
-                    Console.WriteLine(dialog.dialog.EncryptedKey);
+                    Console.WriteLine(session.Session.SessionId);
+                    Console.WriteLine(session.SignalRSession?.Ip);
+                    Console.WriteLine("===");
                 }
             }
             else
