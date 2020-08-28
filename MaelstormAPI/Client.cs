@@ -10,7 +10,6 @@ using DeviceId;
 using MaelstormDTO.Requests;
 using MaelstormDTO.Responses;
 using Newtonsoft.Json;
-using Ninject.Activation;
 
 namespace maelstorm_api
 {
@@ -19,7 +18,7 @@ namespace maelstorm_api
         private static readonly HttpClient httpClient;
         private const int tokenExpiresInMinutes = 5;
         private static Tokens tokens;
-        internal static int Id; 
+        internal static long Id; 
         private static string fingerprint;
         private static string app;
         private static string os;

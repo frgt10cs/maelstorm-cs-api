@@ -6,13 +6,13 @@ namespace MaelstormDTO.Responses
     public class Message
     {
         [JsonProperty]
-        public int Id { get; set; }
+        public long Id { get; set; }
         [JsonProperty]
         public string IVBase64 { get; set; }
         [JsonProperty]
-        public int AuthorId { get; set; }
+        public long AuthorId { get; set; }
         [JsonProperty]
-        public int DialogId { get; set; }
+        public long DialogId { get; set; }
         [JsonProperty]
         public DateTime DateOfSending { get; set; }
         [JsonProperty]

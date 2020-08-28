@@ -2,7 +2,7 @@
 
 namespace MaelstormDTO.Responses
 {
-    public class ClientSessions
+    public class UserSessions
     {
         [JsonProperty] public Session Session { get; set; }
         [JsonProperty] public SignalRSession SignalRSession { get; set; }

@@ -8,17 +8,17 @@ namespace maelstorm_api
 {
     public static class Sessions
     {
-        public static async Task<List<ClientSessions>> GetSessionsAsync(int offset = 0, int count = 10)
+        public static async Task<List<UserSessions>> GetSessionsAsync(int offset = 0, int count = 10)
         {
             var message = new HttpRequestMessage(HttpMethod.Get, $"sessions?offset={offset}&count={count}");
-            var result = await Client.AuthRequestAsync<List<ClientSessions>>(message);
+            var result = await Client.AuthRequestAsync<List<UserSessions>>(message);
             return result;
         }
 
-        public static async Task<ClientSessions> GetSessionAsync(string sessionId)
+        public static async Task<UserSessions> GetSessionAsync(string sessionId)
         {
             var message = new HttpRequestMessage(HttpMethod.Get, $"sessions/{sessionId}");
-            var result = await Client.AuthRequestAsync<ClientSessions>(message);
+            var result = await Client.AuthRequestAsync<UserSessions>(message);
             return result;
         }
 

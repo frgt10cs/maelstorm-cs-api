@@ -4,6 +4,7 @@ namespace MaelstormDTO.Responses
 {
     public class Session
     {
+        public long UserId { get; set; }
         public string SessionId { get; set; }
         public string RefreshToken { get; set; }
         public string OsCpu { get; set; }

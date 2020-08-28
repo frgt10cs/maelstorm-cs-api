@@ -4,7 +4,7 @@ namespace MaelstormDTO.Responses
 {
     public class DeliveredMessageInfo
     {
-        public int MessageId { get; set; }
+        public long MessageId { get; set; }
         public DateTime DateOfSending { get; set; }
     }
 }

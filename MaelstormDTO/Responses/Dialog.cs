@@ -4,7 +4,7 @@ namespace MaelstormDTO.Responses
 {
     public class Dialog
     {
-        [JsonProperty] public int Id { get; set; }
+        [JsonProperty] public long Id { get; set; }
         [JsonProperty] public string SaltBase64 { get; set; }
         [JsonProperty] public string EncryptedKey { get; set; }
         [JsonProperty] public string InterlocutorNickname { get; set; }

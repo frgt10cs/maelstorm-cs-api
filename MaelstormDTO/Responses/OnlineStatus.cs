@@ -2,7 +2,7 @@
 {
     public class OnlineStatus
     {
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         public bool IsOnline { get; set; }
     }
 }

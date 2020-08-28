@@ -13,7 +13,7 @@ namespace MaelstormApiTests
         [Fact]
         public void AuthenticationTest()
         {
-            var result = Client.AuthenticateAsync("huii", "1234567890").Result;
+            var result = Client.AuthenticateAsync("chep", "1234567890").Result;
             Assert.True(result);
         }
     }

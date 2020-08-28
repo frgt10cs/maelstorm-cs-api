@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maelstorm-api", "maelstorm-api\maelstorm-api.csproj", "{BC0D5C9B-0390-4C8C-A1C1-143CD77FD966}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaelstormAPI", "MaelstormAPI\MaelstormAPI.csproj", "{BC0D5C9B-0390-4C8C-A1C1-143CD77FD966}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maelstorm-api-client", "maelstorm-api-client\maelstorm-api-client.csproj", "{17CE084B-1237-467F-9834-F4626584C619}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaelstormAPIClient", "MaelstormAPIClient\MaelstormAPIClient.csproj", "{17CE084B-1237-467F-9834-F4626584C619}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaelstormDTO", "MaelstormDTO\MaelstormDTO.csproj", "{C4047978-684B-4F9E-9899-C642B2872146}"
 EndProject

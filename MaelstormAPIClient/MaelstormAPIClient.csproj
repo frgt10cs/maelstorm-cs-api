@@ -3,11 +3,12 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>maelstorm_api_client</RootNamespace>
+        <RootNamespace>MaelstormAPIClient</RootNamespace>
+        <AssemblyName>MaelstormAPIClient</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\maelstorm-api\maelstorm-api.csproj" />
+      <ProjectReference Include="..\MaelstormAPI\MaelstormAPI.csproj" />
     </ItemGroup>
 
 </Project>

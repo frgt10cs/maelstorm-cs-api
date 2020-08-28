@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\maelstorm-api\maelstorm-api.csproj" />
+      <ProjectReference Include="..\MaelstormAPI\MaelstormAPI.csproj" />
     </ItemGroup>
 
 </Project>

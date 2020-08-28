@@ -14,24 +14,24 @@ namespace maelstorm_api.Models
             this.dialog = dialog;
         }
 
-        public async Task SendMessage(maelstorm_api.Models.Message dialogMessage)
+        public async Task SendMessage(Message message)
         {
-            dialogMessage.DialogId = dialog.Id;
-            dialogMessage.AuthorId = Client.Id;
-            dialogMessage.IVBase64 = "";
+            message.DialogId = dialog.Id;
+            message.AuthorId = Client.Id;
+            message.IVBase64 = "";
             
             var httpMessage = new HttpRequestMessage(HttpMethod.Post, "messages");
             var messageRequest = new SendMessageRequest()
             {
-                DialogId =  dialogMessage.DialogId,
-                Text = dialogMessage.Text,
-                IVBase64 = dialogMessage.IVBase64
+                DialogId =  message.DialogId,
+                Text = message.Text,
+                IVBase64 = message.IVBase64
             };
             var result = await Client.AuthRequestAsync<RequestResult<DeliveredMessageInfo>>(httpMessage, messageRequest);
             if (result.Ok)
             {
-                dialogMessage.Id = result.Data.MessageId;
-                dialogMessage.DateOfSending = result.Data.DateOfSending;
+                message.Id = result.Data.MessageId;
+                message.DateOfSending = result.Data.DateOfSending;
             }
         }
     }

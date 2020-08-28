@@ -5,7 +5,7 @@ namespace MaelstormDTO.Responses
     public class AuthenticationResult
     {
         [JsonProperty]
-        public int Id {get; set; }
+        public long Id {get; set; }
         [JsonProperty]
         public string IVBase64 { get; set; }
         [JsonProperty]
