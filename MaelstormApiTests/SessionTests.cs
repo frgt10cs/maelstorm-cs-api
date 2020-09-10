@@ -1,4 +1,4 @@
-﻿using maelstorm_api;
+﻿using MaelstormApi;
 using Xunit;
 
 namespace MaelstormApiTests

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace maelstorm_api.Models
+namespace MaelstormApi.Models
 {
     public class Message
     {

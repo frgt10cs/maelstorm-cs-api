@@ -1,16 +1,17 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using MaelstormApi.Models;
 using MaelstormDTO.Requests;
 using MaelstormDTO.Responses;
 
-namespace maelstorm_api
+namespace MaelstormApi
 {
     public static class Account
     {
-        public static async Task<RequestResult<object>> RegistrationAsync(RegistrationRequest registrationRequest)
+        public static async Task<ServerResponse> RegistrationAsync(RegistrationRequest registrationRequest)
         {
             var message = new HttpRequestMessage(HttpMethod.Post, "account/registration");
-            var result = await Client.RequestAsync<object>(message, registrationRequest);
+            var result = await Client.RequestAsync(message, registrationRequest);
             return result;
         }
     }

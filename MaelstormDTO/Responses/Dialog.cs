@@ -9,7 +9,7 @@ namespace MaelstormDTO.Responses
         [JsonProperty] public string EncryptedKey { get; set; }
         [JsonProperty] public string InterlocutorNickname { get; set; }
         [JsonProperty] public string InterlocutorImage { get; set; }
-        [JsonProperty] public int InterlocutorId { get; set; }
+        [JsonProperty] public long InterlocutorId { get; set; }
         [JsonProperty] public Message LastMessage { get; set; }
         [JsonProperty] public bool IsClosed { get; set; }
 

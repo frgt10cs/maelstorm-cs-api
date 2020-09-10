@@ -1,28 +1,45 @@
 ﻿using System;
-using System.Threading.Tasks;
-using maelstorm_api;
+using MaelstormApi;
 
-namespace maelstorm_api_client
+namespace MaelstormApiClient
 {
+    internal abstract class Command
+    {
+        public string Name { get; protected set; }
+        internal abstract void Excecute();
+    }
+
+    internal class AuthenticationCommand : Command
+    {
+        public AuthenticationCommand()
+        {
+            Name = "Authenticate";
+        }
+        internal override void Excecute()
+        {
+            string login;
+            Console.Write("Login: ");
+            login = Console.ReadLine();
+            Console.Write("Password: ");
+            string password = Console.ReadLine();
+            var result = Client.AuthenticateAsync(login, password).Result;
+            Console.WriteLine(result?"OK!":"Invalid login or password");
+        }
+    }
+
     class Program
     {
+        private static Command[] commands = {
+            new AuthenticationCommand(),
+        };
+        
         static void Main(string[] args)
         {
-            var result = Client.AuthenticateAsync("huii", "1234567890").Result;
-            if (result)
+            Console.WriteLine("===== Welcome to Maelstorm =====");
+            Console.WriteLine("Select any action:");
+            for (int i = 0; i < commands.Length; i++)
             {
-                Console.WriteLine("Token generation time: " + DateTime.Now);
-                var sessions = Sessions.GetSessionsAsync().Result;
-                foreach (var session in sessions)
-                {
-                    Console.WriteLine(session.Session.SessionId);
-                    Console.WriteLine(session.SignalRSession?.Ip);
-                    Console.WriteLine("===");
-                }
-            }
-            else
-            {
-                Console.WriteLine("nope");
+                Console.WriteLine($"[{i}]: {commands[i].Name}");
             }
         }
     }

@@ -7,71 +7,56 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DeviceId;
+using MaelstormApi.Models;
 using MaelstormDTO.Requests;
 using MaelstormDTO.Responses;
 using Newtonsoft.Json;
 
-namespace maelstorm_api
+namespace MaelstormApi
 {
     public static class Client
     {
-        private static readonly HttpClient httpClient;
-        private const int tokenExpiresInMinutes = 5;
-        private static Tokens tokens;
-        internal static long Id; 
-        private static string fingerprint;
-        private static string app;
-        private static string os;
+        private static readonly HttpClient HttpClient;
+        private const int TokenExpiresInMinutes = 5;
+        private static Tokens _tokens;
+        internal static long Id;
+        private static readonly string Fingerprint;
+        private static readonly string App;
+        private static readonly string Os;
 
         static Client()
         {
-            httpClient = new HttpClient();
-            httpClient.BaseAddress =new Uri("http://localhost:5000/api/");fingerprint = new DeviceIdBuilder()
+            HttpClient = new HttpClient();
+            HttpClient.BaseAddress = new Uri("http://localhost:5000/api/");
+            Fingerprint = new DeviceIdBuilder()
                 .AddMachineName()
                 .AddProcessorId()
                 .AddMotherboardSerialNumber()
                 .AddSystemDriveSerialNumber()
                 .ToString();
-            os  =  System.Runtime.InteropServices.RuntimeInformation.OSDescription;
-            app = ".net";
+            Os  =  System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+            App = ".net";
         }
 
-        public static bool isAuthenticated => tokens != null;
+        public static bool IsAuthenticated => _tokens != null;
         
         /// <summary>
         /// Sends a request to the server
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="data">Data which will be included into request</param>
-        /// <typeparam name="T">Expecting type of returning server data</typeparam>
+        /// <param name="data">Data which will be included into request</param>        
         /// <returns></returns>
-        internal static async Task<RequestResult<T>> RequestAsync<T>(HttpRequestMessage message, object data = null)
+        internal static async Task<ServerResponse> RequestAsync(HttpRequestMessage message, object data = null)
         {
             if (data != null)
             {
-                string json = JsonConvert.SerializeObject(data);
-                message.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                string jsonData = JsonConvert.SerializeObject(data);
+                message.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
             }
 
-            var response = await httpClient.SendAsync(message);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(json))
-                {
-                    var result = JsonConvert.DeserializeObject<RequestResult<T>>(json);
-                    return result;
-                }
-            }
-
-            return new RequestResult<T>()
-            {
-                Ok = false,
-                ErrorMessages = new List<string>()
-                {
-                    response.ReasonPhrase
-                }
-            };
+            var response = await HttpClient.SendAsync(message);
+            var serverResponse = await response.AsServerResponseAsync();
+            return serverResponse;
         }
         
         /// <summary>
@@ -81,52 +66,48 @@ namespace maelstorm_api
         /// <param name="data">Data which will be included into request</param>
         /// <typeparam name="T">Expecting type of returning server data</typeparam>
         /// <returns></returns>
-        internal static async Task<T> AuthRequestAsync<T>(HttpRequestMessage message, object data = null)
+        internal static async Task<ServerResponse> AuthRequestAsync(HttpRequestMessage message, object data = null)
         {
             if (IsTokenExpired() && !await RefreshTokenAsync())
             {
                 Logout();
-                return default(T);
+                return new ServerResponse()
+                {
+                    ProblemDetails = new ProblemDetails("The session is expired. It can't be refreshed due to the invalid token.")
+                };
             }
 
-            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer",tokens.AccessToken);
+            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer",_tokens.AccessToken);
             if (data != null)
             {
                 string json = JsonConvert.SerializeObject(data);
                 message.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
-            var response = await httpClient.SendAsync(message);
+            var response = await HttpClient.SendAsync(message);
             
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(json))
-                {
-                    var result = JsonConvert.DeserializeObject<T>(json);
-                    return result;
-                }
-            }
+            var serverResponse = await response.AsServerResponseAsync();
 
-            return default(T);
-        }
+            return serverResponse;
+        }        
         
         public static async Task<bool> AuthenticateAsync(string login, string password)
         {
             var message = new HttpRequestMessage(HttpMethod.Post, "authentication");
-            var result = await RequestAsync<AuthenticationResult>(message,
+            var response = await RequestAsync(message,
                 new AuthenticationRequest()
                 {
                     Login = login,
                     Password = password,
-                    Fingerprint = fingerprint,
-                    App = app,
-                    Os = os
+                    Fingerprint = Fingerprint,
+                    App = App,
+                    Os = Os
                 });
-            
-            if (result.Ok)
+
+            if (response.Ok)
             {
-                tokens = result.Data.Tokens;
-                Id = result.Data.Id;
+                var authResultData = response.GetContent<AuthenticationResult>();
+                _tokens = authResultData.Tokens;
+                Id = authResultData.Id;
                 return true;
             }
 
@@ -136,33 +117,33 @@ namespace maelstorm_api
         public static async Task Logout()
         {
             var message = new HttpRequestMessage(HttpMethod.Post, "authenticate/logout");
-            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", tokens.AccessToken);
-            await httpClient.SendAsync(message);
-            tokens = null;
+            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokens.AccessToken);
+            await HttpClient.SendAsync(message);
+            _tokens = null;
         }
         
         private static bool IsTokenExpired()
         {
-            return (DateTime.Now - tokens.GenerationTime).TotalMinutes > tokenExpiresInMinutes;
+            return (DateTime.Now - _tokens.GenerationTime).TotalMinutes > TokenExpiresInMinutes;
         }
 
         private static async Task<bool> RefreshTokenAsync()
         {
             var refreshTokenInfo = new RefreshTokenRequest()
             {
-                AccessToken = tokens.AccessToken,
-                RefreshToken = tokens.RefreshToken,
-                Fingerprint = fingerprint
+                AccessToken = _tokens.AccessToken,
+                RefreshToken = _tokens.RefreshToken,
+                Fingerprint = Fingerprint
             };
             var message = new HttpRequestMessage(HttpMethod.Post, "authentication/refresh");
-            var result = await RequestAsync<Tokens>(message, refreshTokenInfo);
+            var result = await RequestAsync(message, refreshTokenInfo);
             if (result.Ok)
             {
-                tokens = result.Data;
+                _tokens = result.GetContent<Tokens>();
                 return true;
             }
 
-            tokens = null;
+            _tokens = null;
             return false;
         }
     }

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using maelstorm_api;
+﻿using MaelstormApi;
 using Xunit;
 
 [assembly: TestCollectionOrderer("MaelstormApiTests.DisplayNameOrderer", "MaelstormApiTests")]

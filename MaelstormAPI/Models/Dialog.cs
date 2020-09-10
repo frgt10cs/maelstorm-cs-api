@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MaelstormDTO.Requests;
 using MaelstormDTO.Responses;
 
-namespace maelstorm_api.Models
+namespace MaelstormApi.Models
 {
     public class Dialog
     {
@@ -27,11 +27,12 @@ namespace maelstorm_api.Models
                 Text = message.Text,
                 IVBase64 = message.IVBase64
             };
-            var result = await Client.AuthRequestAsync<RequestResult<DeliveredMessageInfo>>(httpMessage, messageRequest);
-            if (result.Ok)
+            var response = await Client.AuthRequestAsync(httpMessage, messageRequest);
+            if (response.Ok)
             {
-                message.Id = result.Data.MessageId;
-                message.DateOfSending = result.Data.DateOfSending;
+                var deliveredMessageInfo = response.GetContent<DeliveredMessageInfo>();
+                message.Id = deliveredMessageInfo.MessageId;
+                message.DateOfSending = deliveredMessageInfo.DateOfSending;
             }
         }
     }

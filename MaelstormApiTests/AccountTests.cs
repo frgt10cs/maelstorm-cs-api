@@ -1,12 +1,12 @@
-﻿using maelstorm_api;
+﻿using MaelstormApi;
 using MaelstormDTO.Requests;
 using Xunit;
 
 namespace MaelstormApiTests
 {
-    public class RegistrationTests
+    public class AccountTests
     {
-        private string[] nicknames = new[] {"chep", "chepa"};
+        private string[] nicknames = {"chep", "chepa"};
         [Fact(Skip = "Already registered")]
         //[Fact]
         public void RegistrationTest()

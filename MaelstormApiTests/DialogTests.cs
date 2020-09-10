@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using maelstorm_api;
-using maelstorm_api.Models;
+using MaelstormApi;
+using MaelstormApi.Models;
 using Xunit;
 
 namespace MaelstormApiTests
@@ -12,11 +12,11 @@ namespace MaelstormApiTests
         private List<Dialog> dialogs;
 
         [Fact]
-        public void GetDialogsTest()
+        public void GetDialogTest()
         {
-            dialogs = Dialogs.GetDialogsAsync().Result;
-            Assert.NotNull(dialogs);
-            Assert.NotEmpty(dialogs);
+            var dialog = Dialogs.GetDialogAsync(2).Result;
+            
+            Assert.NotNull(dialog);
         }        
         
         [Fact]
