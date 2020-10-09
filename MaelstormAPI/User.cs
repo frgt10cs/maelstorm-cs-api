@@ -7,7 +7,7 @@ namespace MaelstormApi
 {
     public static class User
     {
-        public static async Task<List<UserInfo>> FindUsersByNickname(string nickname)
+        public static async Task<List<UserInfo>> FindUsersByNicknameAsync(string nickname)
         {
             var message = new HttpRequestMessage(HttpMethod.Get,$"users?query={nickname}");
             var response = await Client.AuthRequestAsync(message);

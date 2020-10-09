@@ -116,7 +116,7 @@ namespace MaelstormApi
 
         public static async Task Logout()
         {
-            var message = new HttpRequestMessage(HttpMethod.Post, "authenticate/logout");
+            var message = new HttpRequestMessage(HttpMethod.Delete, "sessions/current");
             message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokens.AccessToken);
             await HttpClient.SendAsync(message);
             _tokens = null;

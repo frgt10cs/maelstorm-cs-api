@@ -33,7 +33,7 @@ namespace MaelstormApi
 
         public static async Task CloseAsync(string sessionId, bool banDevice)
         {
-            var message = new HttpRequestMessage(HttpMethod.Post, $"sessions/close/{sessionId}");
+            var message = new HttpRequestMessage(HttpMethod.Delete, $"sessions/close/{sessionId}");
             await Client.AuthRequestAsync(message, new CloseSessionRequest()
             {
                 SessionId = sessionId,
