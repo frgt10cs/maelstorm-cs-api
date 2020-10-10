@@ -27,7 +27,7 @@ namespace MaelstormApi
         static Client()
         {
             HttpClient = new HttpClient();
-            HttpClient.BaseAddress = new Uri("http://localhost:5000/api/");
+            HttpClient.BaseAddress = new Uri($"{Configuration.Config["baseUrl"]}/api/");
             Fingerprint = new DeviceIdBuilder()
                 .AddMachineName()
                 .AddProcessorId()

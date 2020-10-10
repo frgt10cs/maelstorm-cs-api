@@ -6,18 +6,24 @@ namespace MaelstormApi
 {
     public static class SignalRClient
     {
-        private static HubConnection _connection;
+        private static readonly HubConnection _connection;
 
-        public static bool IsAuthenticated { get; private set; }
+        internal static bool IsAuthenticated { get; private set; }
 
         static SignalRClient()
         {
             _connection = new HubConnectionBuilder()
-                .WithUrl("")
+                .WithUrl(Configuration.Config["messageHub"])
                 .Build();
+
+            _connection.On("OnHubAuthSuccess", () =>
+            {
+                IsAuthenticated = true;
+            });
             
             _connection.On<string>("OnHubAuthFailed", (errorMessage) =>
             {
+                IsAuthenticated = false;
                 Console.WriteLine(errorMessage);
             });
         }
