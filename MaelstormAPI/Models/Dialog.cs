@@ -17,7 +17,7 @@ namespace MaelstormApi.Models
         public async Task SendMessage(Message message)
         {
             message.DialogId = dialog.Id;
-            message.AuthorId = Client.Id;
+            message.AuthorId = Api.Id;
             message.IVBase64 = "";
             
             var httpMessage = new HttpRequestMessage(HttpMethod.Post, "messages");
@@ -27,7 +27,7 @@ namespace MaelstormApi.Models
                 Text = message.Text,
                 IVBase64 = message.IVBase64
             };
-            var response = await Client.AuthRequestAsync(httpMessage, messageRequest);
+            var response = await Api.AuthRequestAsync(httpMessage, messageRequest);
             if (response.Ok)
             {
                 var deliveredMessageInfo = response.GetContent<DeliveredMessageInfo>();

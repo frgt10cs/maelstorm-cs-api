@@ -2,6 +2,7 @@
 using System.Linq;
 using MaelstormApi;
 using MaelstormApi.Models;
+using MaelstormAPI.Services.Implementations;
 using Xunit;
 
 namespace MaelstormApiTests
@@ -14,7 +15,7 @@ namespace MaelstormApiTests
         [Fact]
         public void GetDialogTest()
         {
-            var dialog = Dialogs.GetDialogAsync(2).Result;
+            var dialog = DialogService.GetDialogAsync(2).Result;
             
             Assert.NotNull(dialog);
         }        

@@ -1,4 +1,5 @@
 ﻿using MaelstormApi;
+using MaelstormAPI.Services.Implementations;
 using MaelstormDTO.Requests;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace MaelstormApiTests
         //[Fact]
         public void RegistrationTest()
         {
-            var result = Account.RegistrationAsync(new RegistrationRequest()
+            var result = AccountService.RegistrationAsync(new RegistrationRequest()
             {
                 Nickname = nicknames[0],
                 Email = $"{nicknames[0]}@gmail.com",

@@ -22,7 +22,7 @@ namespace MaelstormApiClient
             login = Console.ReadLine();
             Console.Write("Password: ");
             string password = Console.ReadLine();
-            var result = Client.AuthenticateAsync(login, password).Result;
+            var result = Api.AuthenticateAsync(login, password).Result;
             Console.WriteLine(result?"OK!":"Invalid login or password");
         }
     }

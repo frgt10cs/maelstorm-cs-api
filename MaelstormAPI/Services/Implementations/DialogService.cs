@@ -1,18 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MaelstormApi.Models;
+using MaelstormApi.Services.Abstractions;
+using MaelstormApi.Services.Implementations;
 
-namespace MaelstormApi
+namespace MaelstormAPI.Services.Implementations
 {
-    public static class Dialogs
+    public class DialogService : IDialogService
     {
-        public static async Task<List<Dialog>> GetDialogsAsync(int offset = 0, int count = 10)
+        private Api _api;
+
+        public DialogService(Api api)
+        {
+            this._api = api;
+        }
+        public async Task<List<Dialog>> GetDialogsAsync(int offset = 0, int count = 10)
         {
             var message = new HttpRequestMessage(HttpMethod.Get, $"dialogs?offset={offset}&count={count}");
-            var response = await Client.AuthRequestAsync(message);
+            var response = await _api.AuthRequestAsync(message);
             if (response.Ok)
             {
                 var dialogs = response.GetContent<List<MaelstormDTO.Responses.Dialog>>();
@@ -21,10 +28,10 @@ namespace MaelstormApi
             return new List<Dialog>();
         } 
         
-        public static async Task<Dialog> GetDialogAsync(int interlocutorId)
+        public async Task<Dialog> GetDialogAsync(int interlocutorId)
         {
             var message = new HttpRequestMessage(HttpMethod.Get, $"dialogs/{interlocutorId}");
-            var response = await Client.AuthRequestAsync(message);
+            var response = await _api.AuthRequestAsync(message);
             if (response.Ok)
             {
                 var dialog = response.GetContent<MaelstormDTO.Responses.Dialog>();

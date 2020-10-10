@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MaelstormApi;
+using MaelstormApi.Services.Abstractions;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace MaelstormApi
+namespace MaelstormAPI.Services.Implementations
 {
-    public static class SignalRClient
+    public class SignalRService : ISignalRService
     {
-        private static readonly HubConnection _connection;
+        private readonly HubConnection _connection;
 
-        internal static bool IsAuthenticated { get; private set; }
+        public bool IsAuthenticated { get; private set; }
 
-        static SignalRClient()
+        public SignalRService()
         {
             _connection = new HubConnectionBuilder()
                 .WithUrl(Configuration.Config["messageHub"])
@@ -28,7 +30,7 @@ namespace MaelstormApi
             });
         }
 
-        public static async Task<bool> Connect()
+        public async Task<bool> Connect()
         {
             if (_connection.State == HubConnectionState.Disconnected)
             {
@@ -39,7 +41,7 @@ namespace MaelstormApi
             return false;
         }
 
-        public static void Disconnect()
+        public void Disconnect()
         {
             if (_connection != null && _connection.State == HubConnectionState.Connected)
             {
@@ -47,7 +49,7 @@ namespace MaelstormApi
             }
         }
         
-        internal static async Task AuthAsync(string token, string fingerprint)
+        public async Task AuthAsync(string token, string fingerprint)
         {
             await _connection.InvokeAsync("auth", token, fingerprint);
         }

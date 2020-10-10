@@ -8,26 +8,28 @@ using System.Text;
 using System.Threading.Tasks;
 using DeviceId;
 using MaelstormApi.Models;
+using MaelstormApi.Services.Abstractions;
 using MaelstormDTO.Requests;
 using MaelstormDTO.Responses;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
-namespace MaelstormApi
+namespace MaelstormApi.Services.Implementations
 {
-    public static class Client
+    public class Api : IApi
     {
-        private static readonly HttpClient HttpClient;
+        private readonly HttpClient HttpClient;
         private const int TokenExpiresInMinutes = 5;
-        private static Tokens _tokens;
-        internal static long Id;
-        private static readonly string Fingerprint;
-        private static readonly string App;
-        private static readonly string Os;
+        private  Tokens _tokens;
+        internal  long Id;
+        private  readonly string Fingerprint;
+        private  readonly string App;
+        private  readonly string Os;
 
-        static Client()
+        public Api(IConfiguration configuration)
         {
             HttpClient = new HttpClient();
-            HttpClient.BaseAddress = new Uri($"{Configuration.Config["baseUrl"]}/api/");
+            HttpClient.BaseAddress = new Uri($"{configuration["baseUrl"]}/api/");
             Fingerprint = new DeviceIdBuilder()
                 .AddMachineName()
                 .AddProcessorId()
@@ -37,8 +39,8 @@ namespace MaelstormApi
             Os  =  System.Runtime.InteropServices.RuntimeInformation.OSDescription;
             App = ".net";
         }
-
-        public static bool IsAuthenticated => _tokens != null;
+        
+        public bool IsAuthenticated => _tokens != null;
         
         /// <summary>
         /// Sends a request to the server
@@ -46,7 +48,7 @@ namespace MaelstormApi
         /// <param name="message"></param>
         /// <param name="data">Data which will be included into request</param>        
         /// <returns></returns>
-        internal static async Task<ServerResponse> RequestAsync(HttpRequestMessage message, object data = null)
+        public async Task<ServerResponse> RequestAsync(HttpRequestMessage message, object data = null)
         {
             if (data != null)
             {
@@ -66,7 +68,7 @@ namespace MaelstormApi
         /// <param name="data">Data which will be included into request</param>
         /// <typeparam name="T">Expecting type of returning server data</typeparam>
         /// <returns></returns>
-        internal static async Task<ServerResponse> AuthRequestAsync(HttpRequestMessage message, object data = null)
+        public async Task<ServerResponse> AuthRequestAsync(HttpRequestMessage message, object data = null)
         {
             if (IsTokenExpired() && !await RefreshTokenAsync())
             {
@@ -90,7 +92,7 @@ namespace MaelstormApi
             return serverResponse;
         }        
         
-        public static async Task<bool> AuthenticateAsync(string login, string password)
+        public async Task<bool> AuthenticateAsync(string login, string password)
         {
             var message = new HttpRequestMessage(HttpMethod.Post, "authentication");
             var response = await RequestAsync(message,
@@ -114,7 +116,7 @@ namespace MaelstormApi
             return false;
         }
 
-        public static async Task Logout()
+        public async Task Logout()
         {
             var message = new HttpRequestMessage(HttpMethod.Delete, "sessions/current");
             message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokens.AccessToken);
@@ -122,12 +124,12 @@ namespace MaelstormApi
             _tokens = null;
         }
         
-        private static bool IsTokenExpired()
+        private bool IsTokenExpired()
         {
             return (DateTime.Now - _tokens.GenerationTime).TotalMinutes > TokenExpiresInMinutes;
         }
 
-        private static async Task<bool> RefreshTokenAsync()
+        private async Task<bool> RefreshTokenAsync()
         {
             var refreshTokenInfo = new RefreshTokenRequest()
             {

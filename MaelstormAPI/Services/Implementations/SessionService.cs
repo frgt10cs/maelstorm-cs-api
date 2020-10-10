@@ -1,17 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MaelstormApi.Services.Abstractions;
 using MaelstormDTO.Requests;
 using MaelstormDTO.Responses;
 
-namespace MaelstormApi
+namespace MaelstormApi.Services.Implementations
 {
-    public static class Sessions
+    public class SessionService : ISessionService
     {
-        public static async Task<List<UserSessions>> GetSessionsAsync(int offset = 0, int count = 10)
+        private Api _api;
+        public SessionService(Api api)
+        {
+            this._api = api;
+        }
+        
+        public async Task<List<UserSessions>> GetSessionsAsync(int offset = 0, int count = 10)
         {
             var message = new HttpRequestMessage(HttpMethod.Get, $"sessions?offset={offset}&count={count}");
-            var response = await Client.AuthRequestAsync(message);
+            var response = await _api.AuthRequestAsync(message);
             if (response.Ok)
             {
                 var sessions = response.GetContent<List<UserSessions>>();
@@ -20,10 +27,10 @@ namespace MaelstormApi
             return new List<UserSessions>();
         }
 
-        public static async Task<UserSessions> GetSessionAsync(string sessionId)
+        public async Task<UserSessions> GetSessionAsync(string sessionId)
         {
             var message = new HttpRequestMessage(HttpMethod.Get, $"sessions/{sessionId}");
-            var response = await Client.AuthRequestAsync(message);
+            var response = await _api.AuthRequestAsync(message);
             if (response.Ok)
             {
                 return response.GetContent<UserSessions>();
@@ -31,20 +38,20 @@ namespace MaelstormApi
             return null;
         }
 
-        public static async Task CloseAsync(string sessionId, bool banDevice)
+        public async Task CloseAsync(string sessionId, bool banDevice)
         {
             var message = new HttpRequestMessage(HttpMethod.Delete, $"sessions/close/{sessionId}");
-            await Client.AuthRequestAsync(message, new CloseSessionRequest()
+            await _api.AuthRequestAsync(message, new CloseSessionRequest()
             {
                 SessionId = sessionId,
                 BanDevice = banDevice
             });
         }
 
-        public static async Task<List<OnlineStatus>> GetOnlineStatuses(int[] usersIds)
+        public async Task<List<OnlineStatus>> GetOnlineStatuses(int[] usersIds)
         {
             var message = new HttpRequestMessage(HttpMethod.Get, $"online-statuses/{usersIds}");
-            var response = await Client.AuthRequestAsync(message);
+            var response = await _api.AuthRequestAsync(message);
             if (response.Ok)
             {
                 var onlineStatuses = response.GetContent<List<OnlineStatus>>();
