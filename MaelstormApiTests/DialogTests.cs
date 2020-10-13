@@ -15,7 +15,8 @@ namespace MaelstormApiTests
         [Fact]
         public void GetDialogTest()
         {
-            var dialog = DialogService.GetDialogAsync(2).Result;
+            var api = ApiClient.Instance;
+            var dialog = api.Dialogs.GetDialogAsync(2).Result;
             
             Assert.NotNull(dialog);
         }        

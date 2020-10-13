@@ -19,7 +19,7 @@ namespace MaelstormApi
                 return config;
             });
 
-            Bind<IApi>().To<Api>();
+            Bind<IApi>().To<Api>().InSingletonScope();
             Bind<IAccountService>().To<AccountService>();
             Bind<ISessionService>().To<SessionService>();
             Bind<IDialogService>().To<DialogService>();

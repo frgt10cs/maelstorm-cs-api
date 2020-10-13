@@ -1,4 +1,5 @@
 ﻿using MaelstormApi;
+using MaelstormApi.Services.Implementations;
 using Xunit;
 
 namespace MaelstormApiTests
@@ -9,7 +10,8 @@ namespace MaelstormApiTests
         [Fact]
         public void GetSessionsTest()
         {
-            var sessions = Sessions.GetSessionsAsync().Result;
+            var api = ApiClient.Instance;
+            var sessions = api.Sessions.GetSessionsAsync().Result;
             Assert.NotNull(sessions);
             Assert.NotEmpty(sessions);
         }

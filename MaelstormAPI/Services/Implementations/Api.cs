@@ -20,8 +20,8 @@ namespace MaelstormApi.Services.Implementations
     {
         private readonly HttpClient HttpClient;
         private const int TokenExpiresInMinutes = 5;
-        private  Tokens _tokens;
-        internal  long Id;
+        private Tokens _tokens;
+        internal long Id;
         private  readonly string Fingerprint;
         private  readonly string App;
         private  readonly string Os;

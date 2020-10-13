@@ -12,7 +12,8 @@ namespace MaelstormApiTests
         //[Fact]
         public void RegistrationTest()
         {
-            var result = AccountService.RegistrationAsync(new RegistrationRequest()
+            var api = ApiClient.Instance;
+            var result = api.Accounts.RegistrationAsync(new RegistrationRequest()
             {
                 Nickname = nicknames[0],
                 Email = $"{nicknames[0]}@gmail.com",
