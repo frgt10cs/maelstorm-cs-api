@@ -10,9 +10,9 @@ namespace MaelstormAPI.Services.Implementations
 {
     public class DialogService : IDialogService
     {
-        private Api _api;
+        public IApi _api;
 
-        public DialogService(Api api)
+        public DialogService(IApi api)
         {
             this._api = api;
         }

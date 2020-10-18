@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using MaelstormApi.Services.Abstractions;
 using MaelstormAPI.Services.Implementations;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,8 +20,10 @@ namespace MaelstormApi
 
         public ApiClient()
         {
-            var kernel = new StandardKernel();
-            kernel.Load(Assembly.GetExecutingAssembly());
+            var settings = new Ninject.NinjectSettings() { LoadExtensions = false };
+            var kernel = new StandardKernel(settings, new Binder());
+            // kernel.Load(Assembly.GetEntryAssembly());
+            
             
             Dialogs = kernel.Get<IDialogService>();
             Users = kernel.Get<IUserService>();

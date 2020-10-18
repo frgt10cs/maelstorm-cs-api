@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using MaelstormApi.Services.Abstractions;
 using MaelstormApi.Services.Implementations;
 using MaelstormDTO.Requests;
 using MaelstormDTO.Responses;
@@ -8,10 +9,10 @@ namespace MaelstormApi.Models
 {
     public class Dialog
     {
-        private Api _api;
+        private IApi _api;
         public MaelstormDTO.Responses.Dialog dialog;
 
-        internal Dialog(MaelstormDTO.Responses.Dialog dialog, Api api)
+        internal Dialog(MaelstormDTO.Responses.Dialog dialog, IApi api)
         {
             this.dialog = dialog;
             this._api = api;
@@ -20,7 +21,7 @@ namespace MaelstormApi.Models
         public async Task SendMessage(Message message)
         {
             message.DialogId = dialog.Id;
-            message.AuthorId = _api.Id;
+            //message.AuthorId = _api.Id;
             message.IVBase64 = "";
             
             var httpMessage = new HttpRequestMessage(HttpMethod.Post, "messages");

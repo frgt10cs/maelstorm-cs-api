@@ -9,8 +9,8 @@ namespace MaelstormAPI.Services.Implementations
 {
     public class AccountService:IAccountService
     {
-        private Api _api;
-        public AccountService(Api api)
+        private IApi _api;
+        public AccountService(IApi api)
         {
             this._api = api;
         }

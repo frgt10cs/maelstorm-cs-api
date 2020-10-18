@@ -9,8 +9,8 @@ namespace MaelstormApi.Services.Implementations
 {
     public class SessionService : ISessionService
     {
-        private Api _api;
-        public SessionService(Api api)
+        private IApi _api;
+        public SessionService(IApi api)
         {
             this._api = api;
         }

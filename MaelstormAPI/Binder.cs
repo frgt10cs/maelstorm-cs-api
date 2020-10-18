@@ -1,4 +1,7 @@
-﻿using MaelstormApi.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using MaelstormApi.Models;
 using MaelstormApi.Services.Abstractions;
 using MaelstormApi.Services.Implementations;
 using MaelstormAPI.Services.Implementations;
@@ -13,9 +16,14 @@ namespace MaelstormApi
         {
             Bind<IConfiguration>().ToMethod(ctx =>
             {
+                // blazor doesn't allow to read configuration from file
                 var config = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json", true, true)
-                    .Build();
+                        .AddInMemoryCollection(new Dictionary<string, string>
+                        {
+                            {"baseUrl", "http://localhost:5000"},
+                            {"messageHub", "http://localhost:5000/messHub"}
+                        })
+                        .Build();
                 return config;
             });
 

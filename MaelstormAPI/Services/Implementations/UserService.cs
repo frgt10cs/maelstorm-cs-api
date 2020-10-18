@@ -9,9 +9,9 @@ namespace MaelstormAPI.Services.Implementations
 {
     public class UserService:IUserService
     {
-        private Api _api;
+        public IApi _api;
 
-        public UserService(Api api)
+        public UserService(IApi api)
         {
             this._api = api;
         }
