@@ -13,6 +13,7 @@ using MaelstormDTO.Requests;
 using MaelstormDTO.Responses;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System.Security.Cryptography;
 
 namespace MaelstormApi.Services.Implementations
 {
@@ -22,11 +23,13 @@ namespace MaelstormApi.Services.Implementations
         private const int TokenExpiresInMinutes = 5;
         private Tokens _tokens;
         internal long Id;
+        private byte[] userPrivateKey;
         private  readonly string Fingerprint;
         private  readonly string App;
         private  readonly string Os;
+        private ICryptographyService _cryptographyService;
 
-        public Api(IConfiguration configuration)
+        public Api(IConfiguration configuration, ICryptographyService cryptographyService)
         {
             HttpClient = new HttpClient();
             HttpClient.BaseAddress = new Uri($"{configuration["baseUrl"]}/api/");
@@ -38,6 +41,7 @@ namespace MaelstormApi.Services.Implementations
                 .ToString();
             Os  =  System.Runtime.InteropServices.RuntimeInformation.OSDescription;
             App = ".net";
+            _cryptographyService = cryptographyService;
         }
         
         public bool IsAuthenticated => _tokens != null;
@@ -110,6 +114,9 @@ namespace MaelstormApi.Services.Implementations
                 var authResultData = response.GetContent<AuthenticationResult>();
                 _tokens = authResultData.Tokens;
                 Id = authResultData.Id;
+                var userAesKey = _cryptographyService.Pbkdf2(password, Convert.FromBase64String(authResultData.KeySaltBase64));
+                userPrivateKey = _cryptographyService.AesDecryptBytes(Convert.FromBase64String(authResultData.EncryptedPrivateKey), userAesKey,
+                    Convert.FromBase64String(authResultData.IVBase64), 256);
                 return true;
             }
 

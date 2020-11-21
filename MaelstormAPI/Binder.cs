@@ -33,6 +33,7 @@ namespace MaelstormApi
             Bind<IDialogService>().To<DialogService>();
             Bind<IUserService>().To<UserService>();
             Bind<ISignalRService>().To<SignalRService>();
+            Bind<ICryptographyService>().To<CryptographyService>();
         }
     }
 }
