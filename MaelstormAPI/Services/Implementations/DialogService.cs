@@ -28,7 +28,7 @@ namespace MaelstormAPI.Services.Implementations
             return new List<Dialog>();
         } 
         
-        public async Task<Dialog> GetDialogAsync(int interlocutorId)
+        public async Task<Dialog> GetDialogAsync(long interlocutorId)
         {
             var message = new HttpRequestMessage(HttpMethod.Get, $"dialogs/{interlocutorId}");
             var response = await _api.AuthRequestAsync(message);
