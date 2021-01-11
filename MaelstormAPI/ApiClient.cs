@@ -16,6 +16,8 @@ namespace MaelstormApi
         public IUserService Users { get; private set; }
         public ISessionService Sessions { get; private set; }
         public IAccountService Accounts { get; private set; }
+        //public ISignalRService SignalR { get; private set; }
+        public IMessageNotificationService MessageNotificationService { get; private set; }
         public IApi Api { get; private set; }
 
         public ApiClient()
@@ -23,12 +25,14 @@ namespace MaelstormApi
             var settings = new Ninject.NinjectSettings() { LoadExtensions = false };
             var kernel = new StandardKernel(settings, new Binder());
             // kernel.Load(Assembly.GetEntryAssembly());
-            
-            
+
+
             Dialogs = kernel.Get<IDialogService>();
             Users = kernel.Get<IUserService>();
             Sessions = kernel.Get<ISessionService>();
             Accounts = kernel.Get<IAccountService>();
+            //SignalR = kernel.Get<SignalRService>();
+            MessageNotificationService = kernel.Get<IMessageNotificationService>();
             Api = kernel.Get<IApi>();
         }
     }

@@ -24,28 +24,31 @@ namespace MaelstormApi.Services.Implementations
         private Tokens _tokens;
         internal long Id;
         private byte[] userPrivateKey;
-        private  readonly string Fingerprint;
-        private  readonly string App;
-        private  readonly string Os;
+        private readonly string _fingerprint;
+        private readonly string _app;
+        private readonly string _os;
         private ICryptographyService _cryptographyService;
+        private ISignalRService _signalRService;
 
-        public Api(IConfiguration configuration, ICryptographyService cryptographyService)
+        public Api(IConfiguration configuration, ICryptographyService cryptographyService,
+            ISignalRService signalRService)
         {
             HttpClient = new HttpClient();
             HttpClient.BaseAddress = new Uri($"{configuration["baseUrl"]}/api/");
-            Fingerprint = new DeviceIdBuilder()
+            _fingerprint = new DeviceIdBuilder()
                 .AddMachineName()
                 .AddProcessorId()
                 .AddMotherboardSerialNumber()
                 .AddSystemDriveSerialNumber()
                 .ToString();
-            Os  =  System.Runtime.InteropServices.RuntimeInformation.OSDescription;
-            App = ".net";
+            _os = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+            _app = ".net";
             _cryptographyService = cryptographyService;
+            _signalRService = signalRService;
         }
-        
+
         public bool IsAuthenticated => _tokens != null;
-        
+
         /// <summary>
         /// Sends a request to the server
         /// </summary>
@@ -64,7 +67,7 @@ namespace MaelstormApi.Services.Implementations
             var serverResponse = await response.AsServerResponseAsync();
             return serverResponse;
         }
-        
+
         /// <summary>
         /// Sends a request to the server including authentication tokens
         /// </summary>
@@ -76,26 +79,26 @@ namespace MaelstormApi.Services.Implementations
         {
             if (IsTokenExpired() && !await RefreshTokenAsync())
             {
-                Logout();
+                LogoutAsync();
                 return new ServerResponse()
                 {
                     ProblemDetails = new ProblemDetails("The session is expired. It can't be refreshed due to the invalid token.")
                 };
             }
 
-            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer",_tokens.AccessToken);
+            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokens.AccessToken);
             if (data != null)
             {
                 string json = JsonConvert.SerializeObject(data);
                 message.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
             var response = await HttpClient.SendAsync(message);
-            
+
             var serverResponse = await response.AsServerResponseAsync();
 
             return serverResponse;
-        }        
-        
+        }
+
         public async Task<bool> AuthenticateAsync(string login, string password)
         {
             var message = new HttpRequestMessage(HttpMethod.Post, "authentication");
@@ -104,9 +107,9 @@ namespace MaelstormApi.Services.Implementations
                 {
                     Login = login,
                     Password = password,
-                    Fingerprint = Fingerprint,
-                    App = App,
-                    Os = Os
+                    Fingerprint = _fingerprint,
+                    App = _app,
+                    Os = _os
                 });
 
             if (response.Ok)
@@ -115,22 +118,29 @@ namespace MaelstormApi.Services.Implementations
                 _tokens = authResultData.Tokens;
                 Id = authResultData.Id;
                 var userAesKey = _cryptographyService.Pbkdf2(password, Convert.FromBase64String(authResultData.KeySaltBase64));
-                userPrivateKey = _cryptographyService.AesDecryptBytes(Convert.FromBase64String(authResultData.EncryptedPrivateKey), userAesKey,
-                    Convert.FromBase64String(authResultData.IVBase64), 256);
+                userPrivateKey = _cryptographyService.AesDecryptBytes(Convert.FromBase64String(authResultData.EncryptedPrivateKey),
+                     userAesKey, Convert.FromBase64String(authResultData.IVBase64), 256);
                 return true;
             }
 
             return false;
         }
 
-        public async Task Logout()
+        public async Task<bool> EstablishSignalRConnection()
+        {
+            /// TODO: check for success
+            await _signalRService.AuthAsync(_tokens.AccessToken, _fingerprint);
+            return true;
+        }
+
+        public async Task LogoutAsync()
         {
             var message = new HttpRequestMessage(HttpMethod.Delete, "sessions/current");
             message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokens.AccessToken);
             await HttpClient.SendAsync(message);
             _tokens = null;
         }
-        
+
         private bool IsTokenExpired()
         {
             return (DateTime.Now - _tokens.GenerationTime).TotalMinutes > TokenExpiresInMinutes;
@@ -142,7 +152,7 @@ namespace MaelstormApi.Services.Implementations
             {
                 AccessToken = _tokens.AccessToken,
                 RefreshToken = _tokens.RefreshToken,
-                Fingerprint = Fingerprint
+                Fingerprint = _fingerprint
             };
             var message = new HttpRequestMessage(HttpMethod.Post, "authentication/refresh");
             var result = await RequestAsync(message, refreshTokenInfo);

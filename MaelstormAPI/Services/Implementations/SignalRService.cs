@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MaelstormApi;
 using MaelstormApi.Services.Abstractions;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Configuration;
 
 namespace MaelstormAPI.Services.Implementations
 {
@@ -12,21 +12,21 @@ namespace MaelstormAPI.Services.Implementations
 
         public bool IsAuthenticated { get; private set; }
 
-        public SignalRService()
+        public SignalRService(IConfiguration configuration)
         {
             _connection = new HubConnectionBuilder()
-                .WithUrl(Configuration.Config["messageHub"])
+                .WithUrl(configuration["messageHub"])
                 .Build();
 
             _connection.On("OnHubAuthSuccess", () =>
             {
                 IsAuthenticated = true;
             });
-            
+
             _connection.On<string>("OnHubAuthFailed", (errorMessage) =>
             {
                 IsAuthenticated = false;
-                Console.WriteLine(errorMessage);
+                //Console.WriteLine(errorMessage);
             });
         }
 
@@ -48,10 +48,15 @@ namespace MaelstormAPI.Services.Implementations
                 _connection.StopAsync();
             }
         }
-        
+
         public async Task AuthAsync(string token, string fingerprint)
         {
             await _connection.InvokeAsync("auth", token, fingerprint);
+        }
+
+        public void RegisterHandler<T>(string name, Action<T> action)
+        {
+            _connection.On<T>(name, action);
         }
     }
 }

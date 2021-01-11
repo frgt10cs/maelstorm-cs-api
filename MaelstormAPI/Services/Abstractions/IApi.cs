@@ -25,8 +25,9 @@ namespace MaelstormApi.Services.Abstractions
         /// <returns></returns>
         public Task<ServerResponse> AuthRequestAsync(HttpRequestMessage message, object data = null);
 
+        Task<bool> EstablishSignalRConnection();
         public Task<bool> AuthenticateAsync(string login, string password);
 
-        public  Task Logout();
+        public Task LogoutAsync();
     }
 }

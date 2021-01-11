@@ -10,13 +10,13 @@ using Ninject.Modules;
 
 namespace MaelstormApi
 {
-    public class Binder:NinjectModule
+    public class Binder : NinjectModule
     {
         public override void Load()
         {
             Bind<IConfiguration>().ToMethod(ctx =>
             {
-                // blazor doesn't allow to read configuration from file
+                // blazor doesn't allow to read files
                 var config = new ConfigurationBuilder()
                         .AddInMemoryCollection(new Dictionary<string, string>
                         {
@@ -32,8 +32,9 @@ namespace MaelstormApi
             Bind<ISessionService>().To<SessionService>();
             Bind<IDialogService>().To<DialogService>();
             Bind<IUserService>().To<UserService>();
-            Bind<ISignalRService>().To<SignalRService>();
+            Bind<ISignalRService>().To<SignalRService>().InSingletonScope();
             Bind<ICryptographyService>().To<CryptographyService>();
+            Bind<IMessageNotificationService>().To<MessageNotificationService>();
         }
     }
 }
