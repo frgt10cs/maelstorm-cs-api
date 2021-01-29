@@ -26,16 +26,29 @@ namespace MaelstormAPI.Services.Implementations
                 return dialogs.Select(d => new Dialog(d, _api)).ToList();
             }
             return new List<Dialog>();
-        } 
-        
-        public async Task<Dialog> GetDialogAsync(long interlocutorId)
+        }
+
+        public async Task<Dialog> GetDialogAsync(long dialogId)
         {
-            var message = new HttpRequestMessage(HttpMethod.Get, $"dialogs/{interlocutorId}");
+            var message = new HttpRequestMessage(HttpMethod.Get, $"dialogs/{dialogId}");
             var response = await _api.AuthRequestAsync(message);
             if (response.Ok)
             {
                 var dialog = response.GetContent<MaelstormDTO.Responses.Dialog>();
-                return new Dialog(dialog, _api);   
+                return new Dialog(dialog, _api);
+            }
+
+            return null;
+        }
+
+        public async Task<Dialog> GetDialogByInterlocutorIdAsync(long interlocutorId)
+        {
+            var message = new HttpRequestMessage(HttpMethod.Get, $"dialogs?interlocutorId={interlocutorId}");
+            var response = await _api.AuthRequestAsync(message);
+            if (response.Ok)
+            {
+                var dialog = response.GetContent<MaelstormDTO.Responses.Dialog>();
+                return new Dialog(dialog, _api);
             }
 
             return null;

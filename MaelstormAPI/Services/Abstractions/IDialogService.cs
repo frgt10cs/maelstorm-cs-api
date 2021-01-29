@@ -6,7 +6,8 @@ namespace MaelstormApi.Services.Abstractions
 {
     public interface IDialogService
     {
-        public Task<List<Dialog>> GetDialogsAsync(int offset = 0, int count = 10);
-        public Task<Dialog> GetDialogAsync(long interlocutorId);
+        Task<List<Dialog>> GetDialogsAsync(int offset = 0, int count = 10);
+        Task<Dialog> GetDialogAsync(long dialogId);
+        Task<Dialog> GetDialogByInterlocutorIdAsync(long interlocutorId);
     }
 }

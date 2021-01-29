@@ -21,6 +21,23 @@ namespace MaelstormApi.Models
             get => _messages.AsReadOnly();
         }
 
+        public void AddNewMessage(MaelstormDTO.Responses.Message message)
+        {
+            _messages.Add((Message)message);
+        }
+
+        public void RemoveMessage(Message message)
+        {
+            _messages.Remove(message);
+        }
+
+        public void RemoveMessage(long messageId)
+        {
+            var message = _messages.FirstOrDefault(m => m.Id == messageId);
+            if (message != null)
+                RemoveMessage(message);
+        }
+
         internal Dialog(MaelstormDTO.Responses.Dialog dialog, IApi api)
         {
             this.dialog = dialog;
@@ -41,7 +58,7 @@ namespace MaelstormApi.Models
             var httpMessage = new HttpRequestMessage(HttpMethod.Post, "messages");
             var messageRequest = new SendMessageRequest()
             {
-                DialogId =  dialog.Id,
+                DialogId = dialog.Id,
                 Text = text,
                 IVBase64 = ""
             };
@@ -53,7 +70,7 @@ namespace MaelstormApi.Models
                 message.DateOfSending = deliveredMessageInfo.DateOfSending;
             }
         }
-        
+
         public async Task UploadMessagesAsync(bool unreaded, int offset, int count)
         {
             // check
@@ -64,7 +81,7 @@ namespace MaelstormApi.Models
             if (response.Ok)
             {
                 var messageResponses = response.GetContent<IEnumerable<MaelstormDTO.Responses.Message>>();
-                var messages = messageResponses.Select(mr => (Message) mr).ToList();
+                var messages = messageResponses.Select(mr => (Message)mr).ToList();
                 _messages.AddRange(messages);
             }
         }

@@ -8,17 +8,12 @@ namespace MaelstormApi.Services.Implementations
     public class MessageNotificationService : IMessageNotificationService
     {
 
-        private List<IObserver<Message>> _subscribers;
+        public event Action<Message> OnNewMessage;
         private ISignalRService _signalRService;
         public MessageNotificationService(ISignalRService signalRService)
         {
-            _subscribers = new List<IObserver<Message>>();
             _signalRService = signalRService;
-            _signalRService.RegisterHandler<Message>("OnNewMessage", message => _subscribers.ForEach(s => s.OnNext(message)));
-        }
-        public void SubscribeForNewMessages(IObserver<Message> subscriber)
-        {
-            _subscribers.Add(subscriber);
+            _signalRService.RegisterHandler<Message>("OnNewMessage", message => OnNewMessage?.Invoke(message));
         }
     }
 }
